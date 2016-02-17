@@ -1,0 +1,22 @@
+Wrote a python program to perform blocking (blocking.py). It accepts 2 files containing data in json format and a matching attribute on which the blocking has to be performed.
+
+Steps:
+1) An inverted index, indexed on the blocking attribute is built from data in table B.
+2) It then iterates through all tuples in the table A
+       pairs it with table B tuples having the same value for the blocking attribute
+
+Because, table B is indexed on the blocking attribute, looking up tuples on it is efficient compared to a brute force method of trying to match every record in table A with each record in table B which would be in the order of n^2. Therefore, the matching records in table C are pairs of records from table A and table B having the same value for the blocking attribute.
+
+All the blocking strategies tried are listed below:
+1.  Blocking on Publisher
+Publisher was used to perform blocking using exact match. Below is the statistics of the blocking operation:
+no. of records in table A: 3467
+no. of records in table B: 3253
+no. of records in the candidate set, table C: 81294
+The pair of records to be matched is thus reduced from (3467 * 3467 = 11278151) to 81294 which is 0.72 % of all the possible pairs.
+
+2.  Blocking on Publisher and Publication year and month
+While picking a random sample of around 300 tuples from the above tableC for the golden data, we noticed that the number of true positives picked was very less (< 20). We wanted to work with a bigger set of true positives. Hence, we decided to reduce the size of tableC.
+After blocking with Publisher, we included a pair of tuples in tableC only if they had the same publication year and month. Statistics of this blocking operation is shown below:
+no. of records in the candidate set, table C: 1099
+The pair of records to be matched is thus reduced from (3467 * 3467 = 11278151) to 81294 which is ~0.01 % of all the possible pairs.
